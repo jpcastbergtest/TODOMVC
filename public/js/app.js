@@ -8,7 +8,7 @@ jQuery(function ($) {
 
 	var ENTER_KEY = 13;
 	var ESCAPE_KEY = 27;
-
+  
 	var util = {
 		uuid: function () {
 			/*jshint bitwise:false */
