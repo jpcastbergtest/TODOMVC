@@ -8,7 +8,7 @@ jQuery(function ($) {
 
 	var ENTER_KEY = 13;
 	var ESCAPE_KEY = 27;
-  
+
 	var util = {
 		uuid: function () {
 			/*jshint bitwise:false */
@@ -157,7 +157,7 @@ jQuery(function ($) {
 		},
 		edit: function (e) {
 			var $input = $(e.target).closest('li').addClass('editing').find('.edit');
-			$input.val($input.val()).focus();
+			$input.focus(); // $input.val($input.val()).focus();
 		},
 		editKeyup: function (e) {
 			if (e.which === ENTER_KEY) {
