@@ -33,7 +33,7 @@ jQuery(function ($) {
 				return localStorage.setItem(namespace, JSON.stringify(data));
 			} else {
 				var store = localStorage.getItem(namespace);
-				return JSON.parse(store) || []; //(store && JSON.parse(store))
+				return (store && JSON.parse(store)) || [];
 			}
 		}
 	};
