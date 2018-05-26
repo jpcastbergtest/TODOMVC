@@ -41,7 +41,8 @@ jQuery(function ($) {
 	var App = {
 		init: function () {
 			this.todos = util.store('todos-jquery');
-			this.todoTemplate = Handlebars.compile($('#todo-template').html());
+			//this.todoTemplate = Handlebars.compile($('#todo-template').html());
+      this.todoTemplate = Handlebars.compile(document.getElementById('todo-template').html());
 			this.footerTemplate = Handlebars.compile($('#footer-template').html());
 			this.bindEvents();
 
