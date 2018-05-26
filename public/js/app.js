@@ -42,8 +42,9 @@ jQuery(function ($) {
 		init: function () {
 			this.todos = util.store('todos-jquery');
 			//this.todoTemplate = Handlebars.compile($('#todo-template').html());
-      this.todoTemplate = Handlebars.compile(document.getElementById('todo-template').html());
-			this.footerTemplate = Handlebars.compile($('#footer-template').html());
+      this.todoTemplate = Handlebars.compile(document.getElementById('todo-template').innerHTML);
+			//this.footerTemplate = Handlebars.compile($('#footer-template').html());
+      this.footerTemplate = Handlebars.compile(document.getElementById('footer-template').innerHTML);
 			this.bindEvents();
 
 			new Router({
@@ -54,7 +55,9 @@ jQuery(function ($) {
 			}).init('/all');
 		},
 		bindEvents: function () {
-			$('#new-todo').on('keyup', this.create.bind(this));
+      const NEW_TODO = document.getElementById('new-todo');
+			//$('#new-todo').on('keyup', this.create.bind(this));
+      NEW_TODO.addEventListener('keyup', this.create.bind(this));
 			$('#toggle-all').on('change', this.toggleAll.bind(this));
 			$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
 			$('#todo-list')
