@@ -56,18 +56,26 @@ jQuery(function ($) {
 		},
 		bindEvents: function () {
       const NEW_TODO = document.getElementById('new-todo');
-      const TOGGLE_ALL = document.getElementById('toggle-all')
+      const TOGGLE_ALL = document.getElementById('toggle-all');
+			const FOOTER = document.getElementById('footer');
+			const TODO_LIST = document.getElementById('todo-list');
 			//$('#new-todo').on('keyup', this.create.bind(this));
       NEW_TODO.addEventListener('keyup', this.create.bind(this));
 			//$('#toggle-all').on('change', this.toggleAll.bind(this));
       TOGGLE_ALL.addEventListener('change', this.toggleAll.bind(this));
-			$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
-			$('#todo-list')
+			//$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
+			FOOTER.addEventListener('click', this.destroyCompleted.bind(this));
+			/*$('#todo-list')
 				.on('change', '.toggle', this.toggle.bind(this))
 				.on('dblclick', 'label', this.edit.bind(this))
 				.on('keyup', '.edit', this.editKeyup.bind(this))
 				.on('focusout', '.edit', this.update.bind(this))
-				.on('click', '.destroy', this.destroy.bind(this));
+				.on('click', '.destroy', this.destroy.bind(this));*/
+			TODO_LIST.addEventListener('change', this.toggle.bind(this));
+			TODO_LIST.addEventListener('dblclick', this.edit.bind(this));
+			TODO_LIST.addEventListener('keyup', this.editKeyup.bind(this));
+			TODO_LIST.addEventListener('focusout', this.update.bind(this));
+			TODO_LIST.addEventListener('click', this.destroy.bind(this));
 		},
 		render: function () {
 			var todos = this.getFilteredTodos();
@@ -120,10 +128,12 @@ jQuery(function ($) {
 
 			return this.todos;
 		},
-		destroyCompleted: function () {
-			this.todos = this.getActiveTodos();
-			this.filter = 'all';
-			this.render();
+		destroyCompleted: function (e) {
+			if(e.target.id === 'clear-completed'){
+				this.todos = this.getActiveTodos();
+				this.filter = 'all';
+				this.render();
+			}
 		},
 		// accepts an element from inside the `.item` div and
 		// returns the corresponding index in the `todos` array
@@ -157,44 +167,54 @@ jQuery(function ($) {
 			this.render();
 		},
 		toggle: function (e) {
-			var i = this.indexFromEl(e.target);
-			this.todos[i].completed = !this.todos[i].completed;
-			this.render();
+			if(e.target.className ==='toggle'){
+				var i = this.indexFromEl(e.target);
+				this.todos[i].completed = !this.todos[i].completed;
+				this.render();
+			}
 		},
 		edit: function (e) {
-			var $input = $(e.target).closest('li').addClass('editing').find('.edit');
-			$input.val($input.val()).focus();
+			if (e.target.localName === 'label'){
+				var $input = $(e.target).closest('li').addClass('editing').find('.edit');
+				$input.val($input.val()).focus();
+			}
 		},
 		editKeyup: function (e) {
-			if (e.which === ENTER_KEY) {
-				e.target.blur();
-			}
+			if (e.target.className === 'edit'){
+				if (e.which === ENTER_KEY) {
+					e.target.blur();
+				}
 
-			if (e.which === ESCAPE_KEY) {
-				$(e.target).data('abort', true).blur();
+				if (e.which === ESCAPE_KEY) {
+					$(e.target).data('abort', true).blur();
+				}
 			}
 		},
 		update: function (e) {
-			var el = e.target;
-			var $el = $(el);
-			var val = $el.val().trim();
+			if (e.target.className === 'edit'){
+				var el = e.target;
+				var $el = $(el);
+				var val = $el.val().trim();
 
-			if (!val) {
-				this.destroy(e);
-				return;
+				if (!val) {
+					this.destroy(e);
+					return;
+				}
+
+				if ($el.data('abort')) {
+					$el.data('abort', false);
+				} else {
+					this.todos[this.indexFromEl(el)].title = val;
+				}
+
+				this.render();
 			}
-
-			if ($el.data('abort')) {
-				$el.data('abort', false);
-			} else {
-				this.todos[this.indexFromEl(el)].title = val;
-			}
-
-			this.render();
 		},
 		destroy: function (e) {
-			this.todos.splice(this.indexFromEl(e.target), 1);
-			this.render();
+			if (e.target.className === 'destroy' || e.target.className === 'edit'){
+				this.todos.splice(this.indexFromEl(e.target), 1);
+				this.render();
+			}
 		}
 	};
 
