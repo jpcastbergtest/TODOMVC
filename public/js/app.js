@@ -56,9 +56,11 @@ jQuery(function ($) {
 		},
 		bindEvents: function () {
       const NEW_TODO = document.getElementById('new-todo');
+      const TOGGLE_ALL = document.getElementById('toggle-all')
 			//$('#new-todo').on('keyup', this.create.bind(this));
       NEW_TODO.addEventListener('keyup', this.create.bind(this));
-			$('#toggle-all').on('change', this.toggleAll.bind(this));
+			//$('#toggle-all').on('change', this.toggleAll.bind(this));
+      TOGGLE_ALL.addEventListener('change', this.toggleAll.bind(this));
 			$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
 			$('#todo-list')
 				.on('change', '.toggle', this.toggle.bind(this))
