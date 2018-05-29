@@ -238,6 +238,12 @@ jQuery(function ($) {
 					return;
 				}
 
+				// if ($el.data('abort')) {
+				// 	$el.data('abort', false);
+				// } else {
+				// 	this.todos[this.indexFromEl(el)].title = val;
+				// }
+
 				if ($el.data('abort')) {
 					$el.data('abort', false);
 				} else {
