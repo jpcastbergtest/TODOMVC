@@ -43,7 +43,7 @@ jQuery(function ($) {
 	const FOOTER = document.getElementById('footer');
 	const TODO_LIST = document.getElementById('todo-list');
 	const MAIN = document.getElementById('main');
-	const DESTROY_BUTTON = document.getElementById('destroy')
+
 	var App = {
 
 
@@ -76,13 +76,28 @@ jQuery(function ($) {
 			*/
       NEW_TODO.addEventListener('keyup', this.create.bind(this));
       TOGGLE_ALL.addEventListener('change', this.toggleAll.bind(this));
-			FOOTER.addEventListener('click', this.destroyCompleted.bind(this));
-			TODO_LIST.addEventListener('change', this.toggle.bind(this));
-			TODO_LIST.addEventListener('dblclick', this.edit.bind(this));
+			FOOTER.addEventListener('click', function(e){
+				if(e.target.id === 'clear-completed'){
+					App.destroyCompleted();
+				}
+			});
+			TODO_LIST.addEventListener('change', function(e){
+				if(e.target.className ==='toggle'){
+					App.toggle(e);
+				}
+			});
+			TODO_LIST.addEventListener('dblclick', function(e){
+				if (e.target.localName === 'label'){
+					App.edit(e);
+				}
+			});
 			TODO_LIST.addEventListener('keyup', this.editKeyup.bind(this));
 			TODO_LIST.addEventListener('focusout', this.update.bind(this));
-			TODO_LIST.addEventListener('click', this.destroy.bind(this));
-			//DESTROY_BUTTON.addEventListener('click', this.destroy.bind(this));
+			TODO_LIST.addEventListener('click', function(e){
+				if (e.target.className === 'destroy' || e.type === 'focusout'){
+					App.destroy(e);
+				}
+			});
 		},
 		render: function () {
 			//$('#todo-list').html(this.todoTemplate(todos));
@@ -153,11 +168,9 @@ jQuery(function ($) {
 			return this.todos;
 		},
 		destroyCompleted: function (e) {
-			if(e.target.id === 'clear-completed'){
 				this.todos = this.getActiveTodos();
 				this.filter = 'all';
 				this.render();
-			}
 		},
 		// accepts an element from inside the `.item` div and
 		// returns the corresponding index in the `todos` array
@@ -194,17 +207,14 @@ jQuery(function ($) {
 			this.render();
 		},
 		toggle: function (e) {
-			if(e.target.className ==='toggle'){
 				var i = this.indexFromEl(e.target);
 				this.todos[i].completed = !this.todos[i].completed;
 				this.render();
-			}
 		},
 		edit: function (e) {
-			if (e.target.localName === 'label'){
 				var $input = $(e.target).closest('li').addClass('editing').find('.edit');
+				//var $input = e.target.closest('li').classList.add('editing').querySelector('.edit');
 				$input.val($input.val()).focus();
-			}
 		},
 		editKeyup: function (e) {
 			if (e.target.className === 'edit'){
@@ -238,10 +248,8 @@ jQuery(function ($) {
 			}
 		},
 		destroy: function (e) {
-			if (e.target.className === 'destroy' || e.type === 'focusout'){
 				this.todos.splice(this.indexFromEl(e.target), 1);
 				this.render();
-			}
 		}
 	};
 
